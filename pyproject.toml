@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "product_service"
+version = "0.1.0"
+description = ""
+authors = ["Fatemeh Hashemi <f.hashemi91@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+SQLAlchemy = "^1.4.32"
+fastapi = "^0.75.0"
+alembic = "^1.7.7"
+uvicorn = "^0.17.6"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+pdbpp = "^0.10.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
