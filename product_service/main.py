@@ -35,3 +35,23 @@ def register_product(
 def list_product(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     products = crud.get_products(db, skip=skip, limit=limit)
     return products
+
+
+@app.get("/products/{product_id}", response_model=schemas.Product)
+def list_product(product_id: int, db: Session = Depends(get_db)):
+    product = crud.get_product(db, product_id)
+    return product
+
+
+@app.post("/products/update/amount/{admin_id}", response_model=schemas.Product)
+def update_amount(
+        admin_id: str, product_id: int, amount: int, db: Session = Depends(get_db)
+):
+    return crud.update_product_amount(db, product_id, admin_id, amount)
+
+
+@app.post("/products/update/price/{admin_id}", response_model=schemas.Product)
+def update_amount(
+        admin_id: str, product_id: int, price: int, db: Session = Depends(get_db)
+):
+    return crud.update_product_price(db, product_id, admin_id, price)
