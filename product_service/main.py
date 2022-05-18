@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from product_service import crud, schemas
 from product_service.models.product import Product
 from product_service.database import engine, Base, SessionLocal
+from product_service.pubsub import submit_message
 
 Base.metadata.create_all(bind=engine)
 
@@ -28,17 +29,21 @@ def verify_admin() -> bool:
 def register_product(
     admin_id: str, info: schemas.ProductCreate, db: Session = Depends(get_db)
 ):
+    submit_message("new product added", admin_id=str(admin_id))
     return crud.add_product(db=db, info=info, admin_id=admin_id)
 
 
 @app.get("/products", response_model=list[schemas.Product])
 def list_product(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    submit_message("product list requested")
     products = crud.get_products(db, skip=skip, limit=limit)
     return products
 
 
 @app.get("/products/{product_id}", response_model=schemas.Product)
 def list_product(product_id: int, db: Session = Depends(get_db)):
+    submit_message("product detail requested", product_id=str(product_id))
+    
     product = crud.get_product(db, product_id)
     return product
 
@@ -47,6 +52,8 @@ def list_product(product_id: int, db: Session = Depends(get_db)):
 def update_amount(
         admin_id: str, product_id: int, amount: int, db: Session = Depends(get_db)
 ):
+    submit_message("product detail amount update requested", product_id=str(product_id))
+    
     return crud.update_product_amount(db, product_id, admin_id, amount)
 
 
@@ -54,4 +61,6 @@ def update_amount(
 def update_amount(
         admin_id: str, product_id: int, price: int, db: Session = Depends(get_db)
 ):
+    submit_message("product detail amount update requested", product_id=str(product_id))
+
     return crud.update_product_price(db, product_id, admin_id, price)
