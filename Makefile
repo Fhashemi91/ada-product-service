@@ -13,4 +13,8 @@ run:
 db_upgrade:
 	alembic -c product_service/migrations/alembic.ini upgrade head
 
+deploy:
+	gcloud builds submit --tag gcr.io/ada-return/product-service
+	gcloud run deploy --image gcr.io/ada-return/product-service --platform managed
+
 # end
